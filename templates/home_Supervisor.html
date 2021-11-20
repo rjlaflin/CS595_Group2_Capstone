@@ -114,11 +114,11 @@ button {
            {% for i in all_users %}
                 {% if i.user_type == 0 %}
                     <tr>
-                        {% if i.name == cur_user.name %}
+                       <!--{ if i.name == cur_user.name %}-->
                             <td><a href="/user_status?name={{ i.name }}" style="text-decoration: none">{{ i.name }}</a></td>
-                        {% elif i.name != cur_user.name %}
+                        <!--{ elif i.name != cur_user.name %}
                             <td>{{ i.name }}</td>
-                        {% endif %}
+                        { endif %}-->
                         <td>{{ i.id }}</td>
                         <td>{{ i.unique_id }}</td>
                     </tr>

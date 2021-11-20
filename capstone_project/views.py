@@ -169,9 +169,9 @@ class Login(View):
 class HomeSupervisor(View):
     def get(self, request):
         all_users = User.objects.all()
-        cur_user = User.objects.get(unique_id=request.session["uname"])
-        print(cur_user.name)
-        return render(request, "home_Supervisor.html", {"all_users": all_users, "cur_user": cur_user})
+        #cur_user = User.objects.get(unique_id=request.session["uname"])
+        #print(cur_user.name)
+        return render(request, "home_Supervisor.html", {"all_users": all_users})
 
     def post(self, request):
         pass
