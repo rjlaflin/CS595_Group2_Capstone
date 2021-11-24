@@ -19,12 +19,14 @@ class User(models.Model):
     )
     insurance_information = models.CharField(max_length=1000)
 
+
 class StatusTable(models.Model):
     NotComplete = 0
     NotAdequate = 1
     Adequate = 2
     ExceedsAdequacy = 3
     Great = 4
+
 
 class Goals(models.Model):
 
@@ -42,7 +44,7 @@ class Goals(models.Model):
 
     id = models.IntegerField(primary_key=True)
     goal = models.CharField(max_length=400, default=None)
-    userforgoal = models.ForeignKey(User, on_delete= models.CASCADE, default=None)
+    userforgoal = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     statusofgoal = models.IntegerField(
         choices=GoalStatus.choices,
         default=GoalStatus.NotComplete

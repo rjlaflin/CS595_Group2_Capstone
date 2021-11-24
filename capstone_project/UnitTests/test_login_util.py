@@ -1,5 +1,5 @@
 import uuid
-from capstone_project.LoginUtil import LoginUtil
+from capstone_project.ClassDesign.LoginUtil import LoginUtil
 from django.test import TestCase, Client
 from django.shortcuts import reverse
 from capstone_project.models import User
@@ -14,7 +14,7 @@ class TestLoginUtil(TestCase):
 
         self.username1 = str(uuid.uuid4())[:6]
         self.password1 = str(uuid.uuid4())[:8]
-        self.user1 = User.objects.create(type='0', username=self.username1, password=self.password1)
+        self.user1 = User.objects.create(user_type='0', login_id=self.username1, pwd=self.password1)
 
         self.session['user_id'] = self.user1.id
         self.session.save()
@@ -23,8 +23,8 @@ class TestLoginUtil(TestCase):
         new_pass = str(uuid.uuid4())[:8]
         LoginUtil.update_password(self.user1, new_pass)
         print(new_pass)
-        self.assertEqual(new_pass, self.user1.password, msg='Expected the password to have been updated.')
-        self.assertEqual(False, self.user1.password_tmp, msg='Expected tmp password boolean to change to False.')
+        self.assertEqual(new_pass, self.user1.pwd, msg='Expected the password to have been updated.')
+        self.assertEqual(False, self.user1.pwd_tmp, msg='Expected tmp password boolean to change to False.')
 
     def test_generate_tmp_password(self):
         tmp_pass = LoginUtil.generate_tmp_password()
