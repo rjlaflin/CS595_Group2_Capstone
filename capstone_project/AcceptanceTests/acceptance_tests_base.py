@@ -5,7 +5,7 @@ from capstone_project.viewsupport.message import Message, MessageQueue
 E = TypeVar('E')
 
 
-class TASAcceptanceTestCase(Generic[E], TestCase):
+class AcceptanceTestCase(Generic[E], TestCase):
 
     def assertContainsMessage(self, resp, has: Message, msg: Optional[str] = None):
         """

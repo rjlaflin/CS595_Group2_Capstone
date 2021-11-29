@@ -5,11 +5,11 @@ from django.db.models import ObjectDoesNotExist
 
 from capstone_project.models import User
 from capstone_project.viewsupport.errors import UserEditPlace, UserEditError
-from capstone_project.AcceptanceTests.acceptance_tests_base import TASAcceptanceTestCase
+from capstone_project.AcceptanceTests.acceptance_tests_base import AcceptanceTestCase
 from capstone_project.viewsupport.message import MessageQueue, Message
 
 
-class TestCreateUserView(TASAcceptanceTestCase[UserEditError]):
+class TestCreateUserView(AcceptanceTestCase[UserEditError]):
     def setUp(self):
         self.client = Client()
         self.session = self.client.session
