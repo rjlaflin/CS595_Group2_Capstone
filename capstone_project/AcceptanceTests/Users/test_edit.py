@@ -22,7 +22,7 @@ class TestEditUser(TASAcceptanceTestCase[UserEditError]):
         self.supervisor = User.objects.create(
             unique_id=self.supervisor_username,
             pwd=self.old_password,
-            pwd_tmp=False,
+            # pwd_tmp=False,
             user_type=User.UserType.Supervisor
         )
 
@@ -32,7 +32,7 @@ class TestEditUser(TASAcceptanceTestCase[UserEditError]):
         self.staff = User.objects.create(
             unique_id=self.staff_username,
             pwd=self.old_password,
-            pwd_tmp=False,
+            # pwd_tmp=False,
             user_type=User.UserType.Staff
         )
 
@@ -76,7 +76,7 @@ class TestEditUser(TASAcceptanceTestCase[UserEditError]):
         )
 
     def test_edit_self_updates_database(self):
-        # This test uses the professor to update self instead of admin, to cover more use cases
+        # This test uses the staff to update self instead of supervisor, to cover more use cases
         self.set_staff_session()
         resp = self.client.post(self.staff_edit_url, {
             'unique_id': self.staff_username,
@@ -88,19 +88,19 @@ class TestEditUser(TASAcceptanceTestCase[UserEditError]):
         self.assertIsNotNone(new_staff)
         self.assertEqual(new_staff.phone, self.new_phone, 'Did not change contact information in database')
 
-    def test_admin_edit_other_updates_database(self):
+    def test_supervisor_edit_other_updates_database(self):
         self.set_supervisor_session()
         resp = self.client.post(self.staff_edit_url, {
             'unique_id': self.staff_username,
             'phone': self.new_phone,
         }, follow=False)
 
-        new_prof = User.objects.get(username=self.staff_username)
+        new_staff = User.objects.get(username=self.staff_username)
 
-        self.assertIsNotNone(new_prof)
-        self.assertEqual(new_prof.phone, self.new_phone, 'Did not change contact information in database')
+        self.assertIsNotNone(new_staff)
+        self.assertEqual(new_staff.phone, self.new_phone, 'Did not change contact information in database')
 
-    def test_rejects_admin_edit_other_password(self):
+    def test_rejects_supervisor_edit_other_password(self):
         self.set_supervisor_session()
         resp = self.client.post(self.staff_edit_url, {
             'unique_id': self.staff_username,
@@ -112,7 +112,7 @@ class TestEditUser(TASAcceptanceTestCase[UserEditError]):
 
         # self.assertDoesNotRedirect(resp, 'Tried to redirect after failing to update user')
 
-    def test_admin_edit_other_type(self):
+    def test_supervisor_edit_other_type(self):
         self.set_supervisor_session()
         resp = self.client.post(self.staff_edit_url, {
             'unique_id': self.staff_username,
@@ -205,7 +205,7 @@ class TestEditUser(TASAcceptanceTestCase[UserEditError]):
                         msg='Should have received an error about incorrect phone edit.')
         self.assertEqual(error.message(), 'Phone number needs to be exactly 10 digits long.')
 
-    def test_rejects_non_admin_edit_other(self):
+    def test_rejects_non_supervisor_edit_other(self):
         self.set_staff_session()
         resp_post = self.client.post(self.supervisor_edit_url, {
             'unique_id': self.supervisor_username,

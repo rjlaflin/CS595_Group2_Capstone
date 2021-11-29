@@ -10,15 +10,15 @@ class TestLogoutView(TestCase):
         self.client = Client()
         self.session = self.client.session
 
-        self.admin_user = User.objects.create(
+        self.supervisor_user = User.objects.create(
             unique_id='cmwojta',
             pwd='password',
             user_type=User.UserType.Supervisor,
-            pwd_tmp=False
+            # pwd_tmp=False
         )
 
-    def test_logout_as_admin(self):
-        self.session['user_id'] = self.admin_user.id
+    def test_logout_as_supervisor(self):
+        self.session['user_id'] = self.supervisor_user.id
         self.session.save()
 
         resp = self.client.get(reverse('logout'))

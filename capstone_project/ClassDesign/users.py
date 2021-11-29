@@ -17,8 +17,8 @@ class Users:
         """
         Create User with mandatory user type, login_id(front end email), and password, returns user id
         """
-        if type(user_type) is str:
-            user_type = User.UserType.from_str(user_type)
+        if type(user_type) is int:
+            user_type = User.from_int(user_type)
 
         if login_id is None or login_id == '':
             raise TypeError('username cannot be blank')

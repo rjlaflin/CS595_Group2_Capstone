@@ -14,12 +14,12 @@ class LoginUtil:
     @staticmethod
     def update_password(user: User, pwd: str):
         user.pwd = pwd
-        user.pwd_tmp = False
+        # user.pwd_tmp = False
         user.save()
-
+    """ 
     @staticmethod
     def generate_tmp_password() -> str:
-        return str(uuid.uuid4())[:8]
+        return str(uuid.uuid4())[:8] """
 
     @staticmethod
     def get_user_and_validate_by_user_id(
@@ -50,9 +50,10 @@ class LoginUtil:
             MessageQueue.push(session, Message('You must log into the application before you can view that page'))
             return redirect(reverse('login'))
 
+        """
         if user.pwd_tmp and password_change_redirect:
             MessageQueue.push(session, Message('You must change your password before accessing the application'))
-            return redirect(reverse('users-edit', args=(user_id,)))
+            return redirect(reverse('users-edit', args=(user_id,))) """
 
         user_type = Users.check_user_type(user)
 

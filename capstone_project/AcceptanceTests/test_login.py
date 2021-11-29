@@ -16,7 +16,7 @@ class TestLoginView(TestCase):
             unique_id=self.long_user_username,
             pwd=self.check_pass,
             name="chris wojta",
-            pwd_tmp=False
+            # pwd_tmp=False
         )
 
         self.long_user = long_user.id

@@ -22,7 +22,7 @@ class TestCreateUserView(TASAcceptanceTestCase[UserEditError]):
             unique_id=self.supervisor_username,
             pwd='a-great-password',
             user_type=User.UserType.Supervisor,
-            pwd_tmp=False
+            # pwd_tmp=False
         )
 
         self.Staff_username = 'arodgers'
@@ -30,7 +30,7 @@ class TestCreateUserView(TASAcceptanceTestCase[UserEditError]):
             unique_id=self.Staff_username,
             pwd='a-great-password',
             user_type=User.UserType.Staff,
-            pwd_tmp=False
+            # pwd_tmp=False
         )
 
         self.session['user_id'] = self.Supervisor.id
@@ -44,7 +44,7 @@ class TestCreateUserView(TASAcceptanceTestCase[UserEditError]):
         resp = self.client.post(self.url, {
             'login_id': 'cmwojta',
             # 'new_password': '',
-            'user_type': '3',
+            'user_type': '2',
 
         }, follow=False)
 
@@ -59,7 +59,7 @@ class TestCreateUserView(TASAcceptanceTestCase[UserEditError]):
         resp = self.client.post(self.url, {
             'unique_id': 'cmwojta',
             'new_password': '1234567',  # Short password
-            'user_type': '3',
+            'user_type': '2',
 
         }, follow=False)
 
@@ -74,7 +74,7 @@ class TestCreateUserView(TASAcceptanceTestCase[UserEditError]):
         resp = self.client.post(self.url, {
             # 'unique_id': '',
             'new_password': self.good_password,  # Short password
-            'user_type': '3',
+            'user_type': '2',
 
         }, follow=False)
 
@@ -89,7 +89,7 @@ class TestCreateUserView(TASAcceptanceTestCase[UserEditError]):
         resp = self.client.post(self.url, {
             'unique_id': 'a-very-long-username-that-would-never-fit-in-the-database',
             'new_password': self.good_password,
-            'user_type': '3',
+            'user_type': '2',
 
         }, follow=False)
 
@@ -104,7 +104,7 @@ class TestCreateUserView(TASAcceptanceTestCase[UserEditError]):
         resp = self.client.post(self.url, {
             'unique_id': 'chris wojta',
             'new_password': self.good_password,
-            'user_type': '3',
+            'user_type': '2',
 
         }, follow=False)
 
@@ -115,14 +115,14 @@ class TestCreateUserView(TASAcceptanceTestCase[UserEditError]):
         self.assertTrue(error.place() is UserEditPlace.USERNAME, 'Did not recognize missing username')
         self.assertEqual('A username may not have spaces', error.message())
 
-    def test_rejects_non_admin(self):
+    def test_rejects_non_supervisor(self):
         self.session['user_id'] = self.Staff.id
         self.session.save()
 
         resp = self.client.post(self.url, {
             'login_id': 'arodgers',
             'new_password': self.good_password,
-            'user_type': '3',
+            'user_type': '2',
 
         }, follow=False)
 
