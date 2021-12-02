@@ -11,6 +11,11 @@ class Home(View):
     def get(self, request):
         return render(request, "home.html")
 
+class Logout(View):
+    def get(self, request):
+        request.session.flush()
+        return redirect("login.html")
+
 
 class Information(View):
     def get(self, request):
