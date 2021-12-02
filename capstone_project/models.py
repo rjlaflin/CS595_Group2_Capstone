@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from typing import Optional
 
 
 class User(models.Model):
@@ -19,12 +20,36 @@ class User(models.Model):
     )
     insurance_information = models.CharField(max_length=1000)
 
+    @classmethod
+    def from_int(cls, maybe_type: int, user_types: dict = None) -> UserType:
+        """
+        Try to translate a UserType int, as stored in the database and returned from templates, into a
+        UserType object. Must be in the set ["0", "1", "2"].
+        Raises TypeError if it is not in said set.
+        """
+        if user_types is None:
+            user_types = dict([('0', User.UserType.Supervisor), ('1', User.UserType.Staff),
+                               ('2', User.UserType.Patient)])
+        for key in user_types:
+            if maybe_type == key:
+                return user_types[key]
+        raise TypeError(f'user_type {maybe_type} is not in the set of {user_types}')
+
+    @classmethod
+    def try_from_int(cls, maybe_type: int) -> Optional[UserType]:
+        try:
+            return cls.from_int(maybe_type)
+        except TypeError:
+            return None
+
+
 class StatusTable(models.Model):
     NotComplete = 0
     NotAdequate = 1
     Adequate = 2
     ExceedsAdequacy = 3
     Great = 4
+
 
 class Goals(models.Model):
 
@@ -42,7 +67,7 @@ class Goals(models.Model):
 
     id = models.IntegerField(primary_key=True)
     goal = models.CharField(max_length=400, default=None)
-    userforgoal = models.ForeignKey(User, on_delete= models.CASCADE, default=None)
+    userforgoal = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     statusofgoal = models.IntegerField(
         choices=GoalStatus.choices,
         default=GoalStatus.NotComplete

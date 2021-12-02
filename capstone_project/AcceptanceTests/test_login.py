@@ -12,27 +12,26 @@ class TestLoginView(TestCase):
 
         self.long_user_username = 'cmwojta'
         long_user = User.objects.create(
-            type= User.Supervisor,
-            username=self.long_user_username,
-            password=self.check_pass,
-            l_name='wojta',
-            f_name='chris',
-            password_tmp=False
+            user_type=User.UserType.Supervisor,
+            unique_id=self.long_user_username,
+            pwd=self.check_pass,
+            name="chris wojta",
+            # pwd_tmp=False
         )
 
         self.long_user = long_user.id
 
         self.short_user_username = 'chriswojta'
         self.short_user = User.objects.create(
-            type=User.Staff,
-            username=self.short_user_username,
-            password=self.check_pass,
+            user_type=User.UserType.Staff,
+            unique_id=self.short_user_username,
+            pwd=self.check_pass,
         )
 
     def test_rejects_empty_username(self):
         resp = self.client.post(reverse('login'), {
-            'username': '',
-            'password': 'verysecurepassword'
+            'unique_id': '',
+            'pwd': 'verysecurepassword'
         })
 
         error: LoginError = resp.context['error']
@@ -46,8 +45,8 @@ class TestLoginView(TestCase):
         # does not even ask the database
 
         resp = self.client.post(reverse('login'), {
-            'username': 'very_long_username_username_that_the_database_cannot_hold',
-            'password': 'verysecurepassword',
+            'unique_id': 'very_long_username_username_that_the_database_cannot_hold',
+            'pwd': 'verysecurepassword',
         })
 
         error: LoginError = resp.context['error']
@@ -59,8 +58,8 @@ class TestLoginView(TestCase):
     def test_rejects_no_such_username(self):
         # Username does not exist in the database
         resp = self.client.post(reverse('login'), {
-            'username': 'arodgers12',
-            'password': 'password1',
+            'unique_id': 'arodgers12',
+            'pwd': 'password1',
         })
 
         error = resp.context['error']
@@ -71,8 +70,8 @@ class TestLoginView(TestCase):
 
     def test_rejects_empty_password(self):
         resp = self.client.post(reverse('login'), {
-            'username': self.long_user_username,
-            'password': ''
+            'unique_id': self.long_user_username,
+            'pwd': ''
         })
 
         error: LoginError = resp.context['error']
@@ -84,8 +83,8 @@ class TestLoginView(TestCase):
     def test_rejects_short_password(self):
         # Passwords of less than or equal to 8 passwords are not valid
         resp = self.client.post(reverse('login'), {
-            'username': self.long_user_username,
-            'password': '1234'
+            'unique_id': self.long_user_username,
+            'pwd': '1234'
         })
 
         error: LoginError = resp.context['error']
@@ -97,8 +96,8 @@ class TestLoginView(TestCase):
     def test_rejects_mismatched_password(self):
         # Username and password do not match
         resp = self.client.post(reverse('login'), {
-            'username': self.long_user_username,
-            'password': '1234567890'
+            'unique_id': self.long_user_username,
+            'pwd': '1234567890'
         })
 
         error: LoginError = resp.context['error']
@@ -111,8 +110,8 @@ class TestLoginView(TestCase):
         # Successful login sets the session with the users' primary key (user_id)
         # from the database
         resp = self.client.post(reverse('login'), {
-            'username': self.long_user_username,
-            'password': self.check_pass,
+            'unique_id': self.long_user_username,
+            'pwd': self.check_pass,
         })
 
         try:
@@ -127,14 +126,14 @@ class TestLoginView(TestCase):
     def test_successful_login_sends_redirect(self):
         # Successful login redirects the user to their homepage
         resp = self.client.post(reverse('login'), {
-            'username': self.long_user_username,
-            'password': self.check_pass,
+            'unique_id': self.long_user_username,
+            'pwd': self.check_pass,
         }, follow=True)
 
         redirects = resp.redirect_chain
 
         self.assertEqual(len(redirects), 1, 'Redirected too many times')
-        self.assertEqual(redirects[0][0], reverse('index'), 'Did not redirect returning user to homepage')
+        self.assertEqual(redirects[0][0], reverse('info'), 'Did not redirect returning user to homepage')
 
     def test_first_login_sends_redirect(self):
         # Successful login, when a user has not logged in before,
