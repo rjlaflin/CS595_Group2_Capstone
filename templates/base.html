@@ -38,10 +38,10 @@
         }
         .navigation {
 
-            width: 10%;
+            width: 25%;
             float: left;
             height: 100%;
-            padding-right: 15px;
+            padding-right: 70px;
 
             background-color: dodgerblue;
         }
@@ -66,20 +66,20 @@
 </head>
 <body>
 <div class="menu">
-    <div><button type="button" href="{% url 'logout' %}">Logout</button></div>
+    <div><button type="button" href="{% url 'login' %}">Logout</button></div>
     <div><h1>Welcome!</h1></div>
 </div>
 <div class="main">
     <div class="navigation">
-        <div class="link"><a href="{% url 'Training Plans' %}">Training Plans</a></div>
-        <div class="link"><a href="{% url 'People' %}">People</a></div>
-        <div class="link"><a href="{% url 'Accounts' %}">Accounts</a></div>
+
+        <div class="link"><a href="{% url 'goals' %}">Goals</a></div>
+        <div class="link"><a href="{% url 'addUser' %}">Add_User</a></div>
+        <div class="link"><a href="{% url 'SupervisorHome' %}">People</a></div>
     </div>
     <div class="content">
         <br>
-            {% block content %}
-            {% endblock %}
-        </br>
+        {% block content %}
+        {% endblock %}
     </div>
 </div>
 </body>
