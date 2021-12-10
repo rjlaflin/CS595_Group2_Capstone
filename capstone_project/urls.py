@@ -26,7 +26,7 @@ urlpatterns = [
     path('info.html', Information.as_view()),
     path('home_Supervisor.html', HomeSupervisor.as_view(), name='SupervisorHome'),
     path('add_user.html', AddUser.as_view(), name='addUser'),
-    path('home_instructor.html', HomeInstructor.as_view()),
+    path('home_instructor.html', HomeInstructor.as_view(), name='InstructorHome'),
     path('home_patient.html', HomePatient.as_view()),
     path('goals.html', GetGoals.as_view(), name='goals'),
     path('add_goal.html', AddGoalView.as_view()),

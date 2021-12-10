@@ -73,8 +73,13 @@
     <div class="navigation">
 
         <div class="link"><a href="{% url 'goals' %}">Goals</a></div>
-        <div class="link"><a href="{% url 'addUser' %}">Add_User</a></div>
-        <div class="link"><a href="{% url 'SupervisorHome' %}">People</a></div>
+        {% if session.id == 0 %}
+            <div class="link"><a href="{% url 'addUser' %}">Add_User</a></div>
+            <div class="link"><a href="{% url 'SupervisorHome' %}">People</a></div>
+        {% endif %}
+        {% if session.id == 1 %}
+            <div class="link"><a href="{% url 'InstructorHome' %}">Home</a></div>
+        {% endif %}
     </div>
     <div class="content">
         <br>
